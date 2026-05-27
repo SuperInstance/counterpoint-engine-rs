@@ -1,34 +1,35 @@
 # counterpoint-engine-rs
 
-A species counterpoint engine providing interval arithmetic, voice leading, constraint-based composition, Laman graph rigidity, and holonomy-based harmony analysis — ported from the Python [counterpoint-engine](https://github.com/SuperInstance/counterpoint-engine) library.
+Rust port of [counterpoint-engine](https://github.com/SuperInstance/counterpoint-engine) — species counterpoint rule checker.
 
-## Modules
+## Features
 
-- **interval** — Pitch class math, consonance checks, semitone intervals
-- **rules** — Species counterpoint constraints (no parallel fifths/octaves, proper resolution, max leap, voice independence)
-- **voice_leading** — Voice leading analysis and quality scoring
-- **generator** — Backtracking search counterpoint generation
-- **laman** — Laman graph construction for constraint rigidity
-- **tensor_output** — Tensor-MIDI event encoding
-- **harmony** — Tonal graphs, holonomy cycle checking, Roman numeral analysis
+- **Interval classification**: consonance, dissonance, perfect/imperfect
+- **First species rules**: dissonance detection, parallel 5ths/octaves, voice crossing
+- **Leap checking**: configurable maximum leap size
+- **Scoring**: consonance ratio minus violation penalties
 
 ## Usage
 
 ```rust
-use counterpoint_engine::generator::{CounterpointGenerator, Species, VoiceRange, Scale};
+use counterpoint_engine::{VoicePair, CounterpointChecker};
 
-let gen = CounterpointGenerator::new(
-    Species::First,
-    VoiceRange::new(48, 72),
-    Scale::major(0),
+let pair = VoicePair::new(
+    vec![60, 62, 64, 65, 67],  // C D E F G (cantus firmus)
+    vec![64, 65, 67, 69, 71],  // E F G A B (counterpoint)
 );
-let result = gen.generate(&[60, 62, 64, 65, 67]).unwrap();
-assert!(result.success);
+
+let checker = CounterpointChecker::default();
+let result = checker.check(&pair);
+
+if result.is_valid() {
+    println!("Valid counterpoint! Score: {:.2}", result.score);
+} else {
+    for v in &result.violations {
+        println!("Violation: {:?}", v);
+    }
+}
 ```
-
-## Relation to Python Version
-
-This is a pure Rust port of [SuperInstance/counterpoint-engine](https://github.com/SuperInstance/counterpoint-engine). The core algorithms have been translated to idiomatic Rust with no Python FFI — all types use `i32` for pitch classes and MIDI notes.
 
 ## License
 
