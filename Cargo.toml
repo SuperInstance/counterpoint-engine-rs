@@ -1,0 +1,13 @@
+[package]
+name = "counterpoint-engine"
+version = "0.1.0"
+edition = "2021"
+description = "Species counterpoint engine — interval arithmetic, voice leading, constraint-based composition, Laman rigidity, holonomy harmony"
+license = "MIT"
+keywords = ["music", "counterpoint", "harmony", "voice-leading", "music-theory"]
+categories = ["algorithms", "mathematics"]
+repository = "https://github.com/SuperInstance/counterpoint-engine-rs"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+thiserror = "1"
