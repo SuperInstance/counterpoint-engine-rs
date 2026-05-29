@@ -1,15 +1,15 @@
 # counterpoint-engine-rs
 
-Rust port of [counterpoint-engine](https://github.com/SuperInstance/counterpoint-engine) — species counterpoint rule checker.
+Species counterpoint rule checker — interval classification, first-species rules (parallel 5ths/octaves, voice crossing, leap limits), and consonance scoring.
 
-## Features
+## What This Gives You
 
-- **Interval classification**: consonance, dissonance, perfect/imperfect
-- **First species rules**: dissonance detection, parallel 5ths/octaves, voice crossing
-- **Leap checking**: configurable maximum leap size
-- **Scoring**: consonance ratio minus violation penalties
+- **Interval classification** — Consonance, dissonance, perfect/imperfect intervals
+- **First species rules** — Dissonance detection, parallel 5ths/octaves, voice crossing
+- **Leap checking** — Configurable maximum leap size
+- **Scoring** — Consonance ratio minus violation penalties
 
-## Usage
+## Quick Start
 
 ```rust
 use counterpoint_engine::{VoicePair, CounterpointChecker};
@@ -31,8 +31,58 @@ if result.is_valid() {
 }
 ```
 
+## API Reference
+
+### `VoicePair`
+
+```rust
+VoicePair::new(cantus_firmus, counterpoint)  // Two pitch sequences (MIDI note numbers)
+```
+
+### `CounterpointChecker`
+
+```rust
+CounterpointChecker::default()               // Standard first-species rules
+checker.check(&pair) -> CheckResult          // Evaluate all rules
+```
+
+### `CheckResult`
+
+| Field | Description |
+|-------|-------------|
+| `is_valid()` | Passed all rules |
+| `score` | Consonance ratio minus penalties |
+| `violations` | Vec of specific rule violations |
+
+## How It Fits
+
+- **[counterpoint-engine-c](https://github.com/SuperInstance/counterpoint-engine-c)** — C99 port of this library
+- **[constraint-instrument](https://github.com/SuperInstance/constraint-instrument)** — Counterpoint rules as constraint surfaces for interactive music
+- **[flux-algebra-rs](https://github.com/SuperInstance/flux-algebra-rs)** — Harmonic ring and tuning systems for interval computation
+
+## Testing
+
+9 tests covering interval classification, consonance detection, parallel motion rules, voice crossing, and scoring.
+
+```bash
+cargo test
+```
+
+## Installation
+
+```toml
+[dependencies]
+counterpoint-engine = { git = "https://github.com/SuperInstance/counterpoint-engine-rs" }
+```
+
+```bash
+git clone https://github.com/SuperInstance/counterpoint-engine-rs.git
+cd counterpoint-engine-rs
+cargo build
+```
+
 ## License
 
 MIT
 
-Part of the [SuperInstance OpenConstruct](https://github.com/SuperInstance/OpenConstruct) ecosystem.
+Part of the [SuperInstance OpenConstruct](https://github.com/SuperInstance) ecosystem.
